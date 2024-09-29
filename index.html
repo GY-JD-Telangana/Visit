@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSE Coverage and Customer Report</title>
+    <style>
+        body {
+            background-color: CornSilk;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"][readonly] {
+    background-color: #f0f0f0; /* Light grey background */
+    cursor: not-allowed; /* Change cursor to indicate non-editable */
+}
+
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+.name-list {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+    border: 1px solid #ccc; /* Border around the list */
+    max-height: 150px; /* Max height for the list */
+    overflow-y: auto; /* Scroll if too many items */
+    display: none; /* Initially hidden */
+    background-color: white; /* Background color for the list */
+    position: absolute; /* Position it below the input */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.name-list li {
+    padding: 8px; /* Padding for list items */
+    cursor: pointer; /* Pointer cursor for clickable items */
+}
+
+.name-list li:hover {
+    background-color: #f0f0f0; /* Highlight on hover */
+}
+
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #FFaa00;
+        }
+
+        .radio-group {
+            margin-bottom: 10px;
+        }
+
+        .radio-group label {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        input[type="submit"]:disabled {
+            background-color: grey;
+            cursor: not-allowed;
+        }
+      .radio-group {
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 5fr)); /* Responsive columns */
+    gap: 15px; /* Space between grid items */
+    margin-bottom: 20px; /* Space below the group */
+}
+
+.radio-group label {
+    display: flex; /* Align items in a flex container */
+    align-items: center; /* Center items vertically */
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 5px; /* Space between radio button and label */
+}
+
+
+    </style>
+
+    <script>
+        // Function to get GPS location
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Function to display GPS coordinates in form fields
+        function showPosition(position) {
+            document.getElementById("latitude").value = position.coords.latitude;
+            document.getElementById("longitude").value = position.coords.longitude;
+
+            // Enable the submit button after getting the location
+            document.getElementById("submit-button").disabled = false;
+        }
+
+        // Function to handle geolocation errors
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+
+            // Keep the submit button disabled if there is an error
+            document.getElementById("submit-button").disabled = true;
+        }
+
+        // Function to detect device type
+        function getDeviceType() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            if (/android/i.test(userAgent)) {
+                return 'Android';
+            }
+
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return 'iOS';
+            }
+
+            return 'Unknown'; // Default if neither is detected
+        }
+
+        // Function to submit the form data to Google Sheets
+function submitForm() {
+    const data = {
+        name: document.getElementById("customerName").value, // Updated this to use the correct ID
+        locationInfo: document.getElementById("location").value,
+        purposeOfVisit: document.querySelector('input[name="purpose-of-visit"]:checked').value,
+        dropdown2: document.getElementById("dropdown2").value,
+        district: document.getElementById("district").value,
+        mandal: document.getElementById("subcategory").value,
+        latitude: document.getElementById("latitude").value,
+        longitude: document.getElementById("longitude").value,
+        deviceType: getDeviceType(), // Capture device type
+        category: document.getElementById("category").value // Capture the selected name
+    };
+
+    const url = ""; // Replace with your Google Apps Script URL
+
+    const submitButton = document.getElementById("submit-button");
+    submitButton.textContent = "Please wait, uploading data..."; // Change button text
+    submitButton.disabled = true; // Disable button
+
+    fetch(url, {
+        method: "POST",
+        mode: "no-cors", // 'no-cors' allows cross-origin requests without CORS headers
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then(response => {
+        alert("Form submitted successfully!");
+        submitButton.textContent = "Submit"; // Reset button text
+        submitButton.disabled = false; // Re-enable button
+    }).catch(error => {
+        console.error("Error submitting form:", error);
+        submitButton.textContent = "Submit"; // Reset button text on error
+        submitButton.disabled = false; // Re-enable button
+    });
+}
+
+        // Call getLocation() on page load
+        window.onload = function() {
+            getLocation();
+            // Disable the submit button initially
+            document.getElementById("submit-button").disabled = true;
+        }
+    </script>
+</head>
+<body>
+
+    <img src="https://logos-world.net/imageup/John_Deere/John_Deere-Logo-PNG3.png" alt="Leaping deer logo" width="120" height="75" style="display: block; margin: 0 auto;">
+
+    <b><h2 style="text-align:center;">DSE Customer Visit Report</h2></b>
+
+    <em><h4 style="text-align:center;color:peru;"><mark>Attention:</mark> Fill only when you are at the village</h4></em>
+    
+    <p style="text-align:center;color:peru;">మీరు <b>లొకేషన్</b> ఆన్ చెయ్యక పోయిన (లేదా) లొకేషన్ పర్మిషన్ ఇవ్వక పోయిన "Submit" బటన్ ఆన్ అవ్వదు.</p>
+    <div><p style="text-align:center;color:peru;">లొకేషన్ కి ఎలా పర్మిషన్ ఇవ్వాలో పేజీ కింద ఉన్న వీడియో లో చుడండి </div></p>
+
+    <form onsubmit="event.preventDefault(); submitForm();">
+       
+<label for="search-name">Select Your Name:</label>
+<input type="text" id="search-name" placeholder="Type to search..." oninput="filterNames()" onblur="validateInput()" autocomplete="off">
+<ul id="name-list" class="name-list"></ul>
+
+
+      <br>
+      <br>
+       <label><b>Purpose of Visit:</b></label>
+<div class="radio-group">
+    <label>
+        <input type="radio" id="visitGeneral" name="purpose-of-visit" value="General Visit" required>
+        General Visit
+    </label>
+
+    <label>
+        <input type="radio" id="visitEnqGeneration" name="purpose-of-visit" value="Enq Generation" required>
+        Enq Generation
+    </label>
+
+    <label>
+        <input type="radio" id="visitEnqFollowup" name="purpose-of-visit" value="Enq Followup" required>
+        Enq Followup
+    </label>
+
+    <label>
+        <input type="radio" id="visitEnqClosing" name="purpose-of-visit" value="Enq Closing" required>
+        Enq Closing
+    </label>
+
+    <label>
+        <input type="radio" id="visitPapers or Dues" name="purpose-of-visit" value="Papers or Dues" required>
+        Papers or Dues
+    </label>
+
+    <label>
+        <input type="radio" id="visitOTValuation" name="purpose-of-visit" value="OT Valuation" required>
+        OT Valuation
+    </label>
+
+    <label>
+        <input type="radio" id="visitFinance" name="purpose-of-visit" value="Finance Visit" required>
+        Finance Visit
+    </label>
+
+    <label>
+        <input type="radio" id="visitActivity" name="purpose-of-visit" value="Activity" required>
+        Activity
+    </label>
+
+    <label>
+        <input type="radio" id="visitMediator" name="purpose-of-visit" value="Mediator/Broker Visit" required>
+        Mediator/Broker Visit
+    </label>
+
+    <label>
+        <input type="radio" id="visitGoodwill" name="purpose-of-visit" value="Goodwill visit" required>
+        Goodwill visit
+    </label>
+
+    <label>
+        <input type="radio" id="visitOthers" name="purpose-of-visit" value="Others" required>
+        Others
+    </label>
+</div>
+
+
+     
+
+        <label for="customerName"><b>Customer Name:</b></label>
+        <div class="input-box">
+            <input type="text" id="customerName" name="customerName" required>
+        </div>
+
+        <br> <!-- Line break added here for space between customer name and phone number -->
+
+        <label for="contactInfo"><b>Phone Number:<b></label>
+        <div class="input-box">
+            <input type="text" id="contactInfo" name="contactInfo" required>
+        </div>
+  <br>
+  
+  <label for="location"><b>Village Name:<b></label>
+        <div class="input-box">
+            <input type="text" id="location" name="location" required>
+        </div>
+        <br>
+        <label for="district"><b>Select District:<b></label>
+        <select id="district" name="district" onchange="updateSubcategories()">
+            <option value="">Click to select</option>
+            <option value="Adilabad">Adilabad</option>
+            <option value="Bhadradri Kothagudem">Bhadradri Kothagudem</option>
+        </select>
+
+        <div class="question-box">
+            <label for="subcategory"><b>Select Mandal:<b></label>
+            <select id="subcategory" name="subcategory">
+                <option value="">Click to Select</option>
+            </select>
+        </div>
+
+        
+
+        <label for="dropdown2"><b>Approx Total village population:</label>
+        <select id="dropdown2" name="dropdown2" required>
+            <option value="">Select</option>
+            <option value="0-10 Tractors">0-10 Tractors</option>
+            <option value="10-25 Tractors">10-25 Tractors</option>
+            <option value="25-50 Tractors">25-50 Tractors</option>
+            <option value="50+ Tractors">50+ Tractors</option>
+        </select>
+
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" readonly>
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" readonly>
+
+        <input type="submit" id="submit-button" value="Submit">
+    </form>
+
+    <img src="https://duet-cdn.vox-cdn.com/thumbor/0x0:1080x1080/1200x1200/filters:focal(540x540:541x541):no_upscale():format(webp)/cdn.vox-cdn.com/uploads/chorus_asset/file/22728661/image.gif" width="250" height="400" style="display: block; margin: 20px auto;">
+    
+    
+
+    <script>
+    						// JAVA SCRIPT SECTION 
+    
+        // Function to populate the second dropdown based on the selection in the first dropdown
+        function updateSubcategories() {
+            const districtSelect = document.getElementById("district");
+            const subcategorySelect = document.getElementById("subcategory");
+            const selectedDistrict = districtSelect.value;
+
+            // Clear previous options in the subcategory dropdown
+            subcategorySelect.innerHTML = "";
+
+            // Define subcategories for each district
+            const subcategories = {
+                "Adilabad": ["Adilabad", "Bazarhathnoor", "Bela", "Bheempur", "Boath", "Gudihathnoor", "Ichoda", "Inderavelly", "Jainad", "Mavala", "Narnoor", "Neradigonda", "Talamadugu", "Tamsi", "Utnoor"],
+                "Bhadradri Kothagudem": ["Allapalli", "Aswapuram", "Aswaraopeta", "Bhadrachalam", "Burgampahad", "Chandrugonda", "Cherla", "Dammapeta", "Dummugudem", "Gundala-1", "Julurpad", "Karakagudem", "Kothagudem", "Manuguru", "Mulkalapalle", "Palwancha", "Pinapaka", "Tekulapalle", "Venkatapuram", "Wazeed", "Yellandu"]
+            };
+
+            // Populate the subcategory dropdown based on the selected district
+            if (selectedDistrict in subcategories) {
+                subcategories[selectedDistrict].forEach(function(subcategory) {
+                    const option = document.createElement("option");
+                    option.value = subcategory.toLowerCase();
+                    option.text = subcategory;
+                    subcategorySelect.appendChild(option);
+                });
+            }
+        }
+        
+        // DSE NAMES FUZZY SEARCH
+const names = ["Narender", "Rukesh", "Jagan"]; // List of names
+    let nameSelected = false; // Flag to check if a name was selected
+
+    function filterNames() {
+        const input = document.getElementById("search-name");
+        const filter = input.value.toLowerCase();
+        const nameList = document.getElementById("name-list");
+
+        // Clear previous results
+        nameList.innerHTML = "";
+
+        // Show the name list if there is input
+        if (filter) {
+            nameList.style.display = "block"; // Show the list
+
+            // Filter names based on input
+            const filteredNames = names.filter(name => name.toLowerCase().includes(filter));
+            
+            // Append filtered names to the list
+            filteredNames.forEach(name => {
+                const li = document.createElement("li");
+                li.textContent = name;
+                li.onclick = function() {
+                    selectName(name); // Select name when clicked
+                };
+                nameList.appendChild(li);
+            });
+            
+            // Hide the list if no names match
+            if (filteredNames.length === 0) {
+                nameList.style.display = "none";
+            }
+        } else {
+            nameList.style.display = "none"; // Hide list if input is empty
+        }
+    }
+
+    function selectName(name) {
+        document.getElementById("search-name").value = name; // Set input value
+        document.getElementById("name-list").innerHTML = ""; // Clear the list
+        document.getElementById("name-list").style.display = "none"; // Hide the list
+        nameSelected = true; // Set the flag to true since a name was selected
+    }
+
+    function validateInput() {
+        const input = document.getElementById("search-name").value.trim(); // Get the input value
+
+        // Check if a name was selected or if the input matches any name exactly
+        if (!nameSelected && input && !names.includes(input)) {
+            // Show an error if it doesn't match the predefined names
+            alert("Please select a valid name from the list.");
+            document.getElementById("search-name").value = ""; // Clear the input
+            document.getElementById("name-list").innerHTML = ""; // Clear the list
+            document.getElementById("name-list").style.display = "none"; // Hide the list
+        } else {
+            nameSelected = false; // Reset the flag for the next validation
+        }
+    }
+
+    </script>
+</body>
+</html>
