@@ -91,7 +91,141 @@
         .radio-group input[type="radio"] {
             margin-right: 5px; /* Space between radio button and label */
         }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .name-list {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove padding */
+            margin: 0; /* Remove margin */
+            border: 1px solid #ccc; /* Border around the list */
+            max-height: 150px; /* Max height for the list */
+            overflow-y: auto; /* Scroll if too many items */
+            display: none; /* Initially hidden */
+            background-color: #90EE90; /* Background color for the suggestion list */
+            position: absolute; /* Position it below the input */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+        .name-list li {
+            padding: 8px; /* Padding for list items */
+            cursor: pointer; /* Pointer cursor for clickable items */
+        }
+        .name-list li:hover {
+            background-color: #f0f0f0; /* Highlight on hover */
+        }
+        .error-message {
+            color: red; /* Red color for error message */
+            font-style: italic; /* Italicize the error message */
+            margin-top: 10px; /* Space above the error message */
+        }
+        
     </style>
+    
+   <script>
+        // Function to get GPS location
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Function to display GPS coordinates in form fields
+        function showPosition(position) {
+            document.getElementById("latitude").value = position.coords.latitude;
+            document.getElementById("longitude").value = position.coords.longitude;
+
+            // Enable the submit button after getting the location
+            document.getElementById("submit-button").disabled = false;
+        }
+
+        // Function to handle geolocation errors
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+
+            // Keep the submit button disabled if there is an error
+            document.getElementById("submit-button").disabled = true;
+        }
+
+        // Function to detect device type
+        function getDeviceType() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            if (/android/i.test(userAgent)) {
+                return 'Android';
+            }
+
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return 'iOS';
+            }
+
+            return 'Unknown'; // Default if neither is detected
+        }
+
+        // Function to submit the form data to Google Sheets
+function submitForm() {
+    const data = {
+        name: document.getElementById("customerName").value, // Updated this to use the correct ID
+        locationInfo: document.getElementById("location").value,
+        purposeOfVisit: document.querySelector('input[name="purpose-of-visit"]:checked').value,
+        dropdown2: document.getElementById("dropdown2").value,
+        district: document.getElementById("district").value,
+        mandal: document.getElementById("subcategory").value,
+        latitude: document.getElementById("latitude").value,
+        longitude: document.getElementById("longitude").value,
+        deviceType: getDeviceType(), // Capture device type
+        category: document.getElementById("category").value // Capture the selected name
+    };
+
+    const url = ""; // Replace with your Google Apps Script URL
+
+    const submitButton = document.getElementById("submit-button");
+            submitButton.textContent = "Pl wait, uploading data"; // Change button text
+            submitButton.disabled = true; // Disable button
+
+            fetch(url, {
+                method: "POST",
+                mode: "no-cors", // 'no-cors' allows cross-origin requests without CORS headers
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(response => {
+                alert("Form submitted successfully!");
+                submitButton.textContent = "Submit"; // Reset button text
+                submitButton.disabled = false; // Re-enable button
+            }).catch(error => {
+                console.error("Error submitting form:", error);
+                submitButton.textContent = "Submit"; // Reset button text on error
+                submitButton.disabled = false; // Re-enable button
+            });
+        }
+
+        // Call getLocation() on page load
+        window.onload = function() {
+            getLocation();
+            // Disable the submit button initially
+            document.getElementById("submit-button").disabled = true;
+        }
+    </script>
 </head>
 <body>
     <img src="https://logos-world.net/imageup/John_Deere/John_Deere-Logo-PNG3.png" alt="Leaping deer logo" width="120" height="75" style="display: block; margin: 0 auto;">
@@ -102,8 +236,9 @@
 
     <form onsubmit="event.preventDefault(); submitForm();">
         <label for="search-name">Select Your Name:</label>
-        <input type="text" id="search-name" placeholder="Type to search..." oninput="filterNames()" onblur="validateInput()" autocomplete="off">
+        <input type="text" id="search-name" placeholder="Type to search..." oninput="filterNames()" autocomplete="off">
         <ul id="name-list" class="name-list"></ul>
+        <div id="error-message" class="error-message"></div> <!-- For displaying error messages -->
 
         <br><br>
 
@@ -156,12 +291,11 @@
         </div>
 
         <label for="customerName"><b>Customer Name:</b></label>
-        
         <div class="input-box">
             <input type="text" id="customerName" name="customerName" required>
         </div>
 
-        <br> <!-- Line break added here for space between customer name and phone number -->
+        <br>
 
         <label for="contactInfo"><b>Phone Number:</b></label>
         <div class="input-box">
@@ -237,16 +371,17 @@
         }
 
         // DSE NAMES FUZZY SEARCH
-        const names = ["Narender", "Rukesh", "Jagan"]; // List of names
-        let nameSelected = false; // Flag to check if a name was selected
+        const names = ["Narender", "Rukesh", "Jagan"]; // Predefined list of names
 
         function filterNames() {
             const input = document.getElementById("search-name");
             const filter = input.value.toLowerCase();
             const nameList = document.getElementById("name-list");
+            const errorMessage = document.getElementById("error-message");
 
             // Clear previous results
             nameList.innerHTML = "";
+            errorMessage.textContent = ""; // Clear any previous error message
 
             // Show the name list if there is input
             if (filter) {
@@ -267,7 +402,8 @@
 
                 // Hide the list if no names match
                 if (filteredNames.length === 0) {
-                    nameList.style.display = "none";
+                    nameList.style.display = "none"; // Hide if no matches
+                    showError("No matching names found."); // Show error message
                 }
             } else {
                 nameList.style.display = "none"; // Hide list if input is empty
@@ -275,128 +411,19 @@
         }
 
         function selectName(name) {
-            document.getElementById("search-name").value = name; // Set input value
-            document.getElementById("name-list").innerHTML = ""; // Clear the list
+            document.getElementById("search-name").value = name; // Set input value to the selected name
+            document.getElementById("name-list").innerHTML = ""; // Clear the suggestion list
             document.getElementById("name-list").style.display = "none"; // Hide the list
-            nameSelected = true; // Set the flag to true since a name was selected
+            document.getElementById("error-message").textContent = ""; // Clear error message
         }
 
-        function validateInput() {
-            const input = document.getElementById("search-name").value.trim(); // Get the input value
-
-            // Check if a name was selected or if the input matches any name exactly
-            if (!nameSelected && input && !names.includes(input)) {
-                // Show an error if it doesn't match the predefined names
-                alert("Please select a valid name from the list.");
-                document.getElementById("search-name").value = ""; // Clear the input
-                document.getElementById("name-list").innerHTML = ""; // Clear the list
-                document.getElementById("name-list").style.display = "none"; // Hide the list
-            } else {
-                nameSelected = false; // Reset the flag for the next validation
-            }
+        function showError(message) {
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = message; // Set the error message
+            // Optionally, you can clear the input field here if needed
+            // document.getElementById("search-name").value = ""; // Clear the input field
         }
 
-        // Call getLocation() on Sure! Here’s the continuation of the JavaScript code where we left off, completing the script section:
-
-        // Call getLocation() on page load
-        window.onload = function() {
-            getLocation();
-            // Disable the submit button initially
-            document.getElementById("submit-button").disabled = true;
-        }
-
-        // Function to get GPS location
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
-        // Function to display GPS coordinates in form fields
-        function showPosition(position) {
-            document.getElementById("latitude").value = position.coords.latitude;
-            document.getElementById("longitude").value = position.coords.longitude;
-
-            // Enable the submit button after getting the location
-            document.getElementById("submit-button").disabled = false;
-        }
-
-        // Function to handle geolocation errors
-        function showError(error) {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("User denied the request for Geolocation.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    alert("The request to get user location timed out.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("An unknown error occurred.");
-                    break;
-            }
-
-            // Keep the submit button disabled if there is an error
-            document.getElementById("submit-button").disabled = true;
-        }
-
-        // Function to detect device type
-        function getDeviceType() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            if (/android/i.test(userAgent)) {
-                return 'Android';
-            }
-
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                return 'iOS';
-            }
-
-            return 'Unknown'; // Default if neither is detected
-        }
-
-        // Function to submit the form data to Google Sheets
-        function submitForm() {
-            const data = {
-                name: document.getElementById("customerName").value, // Updated this to use the correct ID
-                locationInfo: document.getElementById("location").value,
-                purposeOfVisit: document.querySelector('input[name="purpose-of-visit"]:checked').value,
-                dropdown2: document.getElementById("dropdown2").value,
-                district: document.getElementById("district").value,
-                mandal: document.getElementById("subcategory").value,
-                latitude: document.getElementById("latitude").value,
-                longitude: document.getElementById("longitude").value,
-                deviceType: getDeviceType(), // Capture device type
-                category: document.getElementById("search-name").value // Capture the selected name
-            };
-
-            const url = ""; // Replace with your Google Apps Script URL
-
-            const submitButton = document.getElementById("submit-button");
-            submitButton.textContent = "Please wait, uploading data..."; // Change button text
-            submitButton.disabled = true; // Disable button
-
-            fetch(url, {
-                method: "POST",
-                mode: "no-cors", // 'no-cors' allows cross-origin requests without CORS headers
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(response => {
-                alert("Form submitted successfully!");
-                submitButton.textContent = "Submit"; // Reset button text
-                submitButton.disabled = false; // Re-enable button
-            }).catch(error => {
-                console.error("Error submitting form:", error);
-                submitButton.textContent = "Submit"; // Reset button text on error
-                submitButton.disabled = false; // Re-enable button
-            });
-        }
     </script>
 </body>
 </html>
