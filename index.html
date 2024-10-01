@@ -48,7 +48,7 @@
             max-height: 150px; /* Max height for the list */
             overflow-y: auto; /* Scroll if too many items */
             display: none; /* Initially hidden */
-            background-color: white; /* Background color for the list */
+            background-color: YellowGreen; /* Background color for the list */
             position: absolute; /* Position it below the input */
             z-index: 1000; /* Ensure it appears above other elements */
         }
@@ -79,7 +79,7 @@
         .radio-group {
             display: grid; /* Use grid layout */
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive columns */
-            gap: 15px; /* Space between grid items */
+            gap: 7px; /* Space between grid items */
             margin-bottom: 20px; /* Space below the group */
         }
 
@@ -89,7 +89,7 @@
         }
 
         .radio-group input[type="radio"] {
-            margin-right: 5px; /* Space between radio button and label */
+            margin-right: 5 px; /* Space between radio button and label */
         }
         input[type="text"] {
             width: 100%;
@@ -314,6 +314,40 @@ function submitForm() {
             <option value="">Click to select</option>
             <option value="Adilabad">Adilabad</option>
             <option value="Bhadradri Kothagudem">Bhadradri Kothagudem</option>
+            <option value="Hyderabad">Hyderabad</option>
+           <option value="Jagitial">Jagitial</option>
+        <option value="Jangoan">Jangoan</option>
+        <option value="Jayashankar Bhupalapally">Jayashankar Bhupalapally</option>
+        <option value="Jogulamba Gadwal">Jogulamba Gadwal</option>
+        <option value="Kamareddy">Kamareddy</option>
+        <option value="Karimnagar">Karimnagar</option>
+        <option value="Khammam">Khammam</option>
+        <option value="Kumuram Bheem">Kumuram Bheem</option>
+        <option value="Mahabubabad">Mahabubabad</option>
+        <option value="Mahabubnagar">Mahabubnagar</option>
+        <option value="Mancherial">Mancherial</option>
+        <option value="Medak">Medak</option>
+        <option value="Medchal Malkajgiri">Medchal Malkajgiri</option>
+        <option value="Mulugu">Mulugu</option>
+        <option value="Nagarkurnool">Nagarkurnool</option>
+        <option value="Nalgonda">Nalgonda</option>
+        <option value="Narayanpet">Narayanpet</option>
+        <option value="Nirmal">Nirmal</option>
+        <option value="Nizamabad">Nizamabad</option>
+        <option value="Others">Others</option>
+        <option value="Peddapalli">Peddapalli</option>
+        <option value="Rajanna Sircilla">Rajanna Sircilla</option>
+        <option value="Ranga Reddy">Ranga Reddy</option>
+        <option value="Sangareddy">Sangareddy</option>
+        <option value="Siddipet">Siddipet</option>
+        <option value="Suryapet">Suryapet</option>
+        <option value="Vikarabad">Vikarabad</option>
+        <option value="Wanaparthy">Wanaparthy</option>
+        <option value="Warangal">Warangal</option>
+        <option value="Warangal (Rural)">Warangal (Rural)</option>
+        <option value="Warangal (Urban)">Warangal (Urban)</option>
+        <option value="Yadadri Bhuvanagiri">Yadadri Bhuvanagiri</option>
+            
         </select>
 
         <div class="question-box">
@@ -321,6 +355,22 @@ function submitForm() {
             <select id="subcategory" name="subcategory">
                 <option value="">Click to Select</option>
             </select>
+        </div>
+
+        <label><b>Is there JD Tractor in this Village?:</b></label>
+        <div class="radio-group">
+            <input type="radio" id="q1a" name="question1" value="Yes" required>
+            <label for="q1a">Yes</label>
+            <input type="radio" id="q1b" name="question1" value="No">
+            <label for="q1b">No</label>
+        </div>
+
+        <label><b>Is there JD MFWD 4WD tractor in this Village?:</b></label>
+        <div class="radio-group">
+            <input type="radio" id="q2a" name="question2" value="Yes" required>
+            <label for="q2a">Yes</label>
+            <input type="radio" id="q2b" name="question2" value="No">
+            <label for="q2b">No</label>
         </div>
 
         <label for="dropdown2"><b>Approx Total village population:</b></label>
@@ -356,7 +406,41 @@ function submitForm() {
             // Define subcategories for each district
             const subcategories = {
                 "Adilabad": ["Adilabad", "Bazarhathnoor", "Bela", "Bheempur", "Boath", "Gudihathnoor", "Ichoda", "Inderavelly", "Jainad", "Mavala", "Narnoor", "Neradigonda", "Talamadugu", "Tamsi", "Utnoor"],
-                "Bhadradri Kothagudem": ["Allapalli", "Aswapuram", "Aswaraopeta", "Bhadrachalam", "Burgampahad", "Chandrugonda", "Cherla", "Dammapeta", "Dummugudem", "Gundala-1", "Julurpad", "Karakagudem", "Kothagudem", "Manuguru", "Mulkalapalle", "Palwancha", "Pinapaka", "Tekulapalle", "Venkatapuram", "Wazeed", "Yellandu"]
+                "Bhadradri Kothagudem": ["Allapalli", "Aswapuram", "Aswaraopeta", "Bhadrachalam", "Burgampahad", "Chandrugonda", "Cherla", "Dammapeta", "Dummugudem", "Gundala-1", "Julurpad", "Karakagudem", "Kothagudem", "Manuguru", "Mulkalapalle", "Palwancha", "Pinapaka", "Tekulapalle", "Venkatapuram", "Wazeed", "Yellandu"],
+                "Hyderabad": ["Ameerpet", "Golconda", "Khairatabad", "Secunderabad"],
+                  "Jagitial": ["Beerpur", "Buggaram", "Dharmapuri", "Gollapalle", "Ibrahimpatnam-1", "Jagtial", "Jagtial Rural", "Kathlapur", "Kodimial", "Koratla", "Mallapur", "Mallial", "Medipalle", "Metpalle", "Pegadapalle", "Raikal", "Sarangapur-2", "Velgatoor"],
+                "Jangoan": ["Bachannapet", "Chilpur", "Devaruppula", "Ghanpur (Station)", "Jangaon", "Kodakandla", "Lingala Ghanpur", "Narmetta", "Palakurthi", "Raghunathpalle", "Tharigoppula", "Zaffergadh"],
+                "Jayashankar Bhupalapally": ["Athmakur", "Bhupalpalle", "Chityal", "Ghanpur (Mulug)", "Kataram", "Mahadevpur", "Malharrao", "Mogullapalle", "Mutharam (Mahadevpur)", "Palimela", "Regonda", "Tekumatla"],
+"Jogulamba Gadwal": ["Alampur", "Dharur", "Gadwal", "Ghattu", "Ieej", "Itikyal", "Maldakal", "Manopad", "Nandinne (Kt Doddi)", "Rajoli", "Undavelly", "Waddepalle"],
+"Kamareddy": ["Banswada", "Bhiknoor", "Bibipet", "Bichkunda", "Birkoor", "Domakonda", "Gandhari", "Jukkal", "Kamareddy", "Lingampet", "Machareddy", "Madnoor", "Nagareddipet", "Nasrullabad", "Nizamsagar", "Pedda Kodapgal", "Pitlam", "Rajampet", "Ramareddy", "Sadasivanagar", "Tadwai", "Yellareddy"],
+"Karimnagar": ["Chigurumamidi", "Choppadandi", "Ellandakunta", "Gangadhara", "Ganneruvaram", "Huzurabad", "Jammikunta", "Karimnagar", "Karimnagar Rural", "Kothapally", "Manakondur", "Ramadugu", "Shankarapatnam", "Timmapur (Lmd Colony)", "Veenavanka"],
+"Khammam": ["Bayyaram", "Bonakal", "Chinthakani", "Enkuru", "Garla", "Kallur", "Kamepalle", "Khammam (Rural)", "Khammam (Urban)", "Konijerla", "Kusumanchi", "Madhira", "Mudigonda", "Nelakondapalle", "Penuballi", "Raghunadhapalem", "Sathupalle", "Singareni", "Tallada", "Thirumalayapalem", "Vemsoor", "Wyra", "Yerrupalem"],
+"Kumuram Bheem": ["Asifabad", "Bejjur", "Chinthalmanepally", "Dahegaon", "Jainoor", "Kagaznagar", "Kerameri", "Kouthala", "Lingapur", "Penchikalpet", "Rebbana", "Sirpur", "Sirpur (T)", "Tiryani", "Wankdi"],
+"Mahabubabad": ["Chinnagudur", "Danthalapalle", "Dornakal", "Gangaram", "Gudur", "Kesamudram", "Kuravi", "Mahabubabad", "Maripeda", "Narsimhulapet", "Nellikudur", "Peddavangara", "Thorrur"],
+"Mahabubnagar": ["Addakal", "Balanagar-1", "Bhoothpur", "Chinnachintakunta", "Devarkadra", "Gandeed", "Hanwada", "Jadcherla", "Koilkonda", "Mahbubnagar", "Midjil", "Musapeta", "Nawabpet-1", "Rajapur"],
+"Mancherial": ["Bellampalle", "Bhimaram", "Bhimini", "Chennur", "Dandepalle", "Hajipur", "Jaipur", "Jannaram", "Kannepalli", "Kasipet", "Kotapalle", "Luxettipet", "Mancherial", "Mandamarri", "Naspur", "Nennal", "Tandur-1", "Vemanpalle"],
+"Medak": ["Alladurg", "Chegunta", "Chilpched", "Havelighanapur", "Kowdipalle", "Kulcharam", "Manoharabad", "Medak", "Narsapur", "Narsingi", "Nizampet", "Papannapet", "Ramayampet", "Regode", "Shankarampet (A)", "Shankarampet (R)", "Shivampet", "Tekmal", "Tupran", "Yeldurthy"],
+"Medchal Malkajgiri": ["Alwal", "Balanagar-2", "Ghatkesar", "Keesara", "Medchal", "Qutubullapur", "Shamirpet", "Uppal"],
+"Mulugu": ["Eturnagaram", "Govindaraopet", "Kannaigudem", "Mangapet", "Mulug-2", "Tadvai", "Venkatapur"],
+"Nagarkurnool": ["Achampet", "Amrabad", "Balmoor", "Bijinapalle", "Charakonda", "Kalwakurthy", "Kodair", "Kollapur", "Lingal", "Nagarkurnool", "Padara", "Peddakothapalle", "Pentlavelli", "Tadoor", "Telkapalle", "Thimmajipet", "Uppununthala", "Urkonda", "Vangoor", "Veldanda"],
+"Nalgonda": ["Adavidulapally", "Anumula", "Chandam Pet", "Chandur", "Chintha Palle", "Chityala", "Dameracherla", "Devarakonda", "Gundla Palle", "Gurrampode", "Kangal", "Kattangoor", "Kethe Palle", "Konda Mallepally", "Madugulapally", "Marriguda", "Miryalaguda", "Munugode", "Nakrekal", "Nalgonda", "Nampally", "Narketpalle", "Neredugomma", "Nidamanur", "Pedda Adiserla Palle", "Peddavoora", "Sali Gouraram", "Thipparthi", "Thirumalagiri(Sagar)", "Thripuraram", "Vemulapalle"],
+"Narayanpet": ["Damaragidda", "Dhanwada", "Kosgi", "Krishna", "Maddur-1", "Maganoor", "Makthal", "Marikal", "Narayanpet", "Narva", "Utkoor"],
+"Nirmal": ["Basar", "Bhainsa", "Dilawarpur", "Kaddam (Peddur)", "Khanapur-2", "Kubeer", "Kuntala", "Laxmanchanda", "Lokeswaram", "Mamda", "Mudhole", "Narsapur G", "Nirmal", "Sarangapur-1", "Soan", "Tanoor"],
+"Nizamabad": ["Armur", "Balkonda", "Bheemgal", "Bodhan", "Chandur", "Dharpalle", "Dichpalle", "Indalwai", "Jakranpalle", "Kammarpalle", "Kotgiri", "Makloor", "Medora", "Mortad", "Mosra", "Mugpal New", "Nandipet", "Navipet", "Nizamabad", "Ranjal", "Rudrur", "Sirkonda", "Varni", "Velpur", "Yargatla", "Yedpalle"],
+"Others": ["Others"],
+"Peddapalli": ["Anthergaon", "Dharmaram", "Elgaid", "Julapalle", "Kamanpur", "Manthani", "Mutharam (Manthani)", "Odela", "Palakurthy", "Peddapalle", "Ramagiri", "Ramagundam", "Srirampur", "Sultanabad"],
+"Rajanna Sircilla": ["Boinpalle", "Chandurthi", "Ellanthakunta", "Gambhiraopet", "Konaraopeta", "Mustabad", "Rudrangi", "Sircilla", "Thangallapalli", "Vemulawada", "Vemulawada Rural", "Yellareddipet"],
+"Ranga Reddy": ["Amangal", "Balapur", "Chevella", "Chowdergudem", "Farooqnagar", "Hayathnagar", "Ibrahimpatnam-2", "Kadthal", "Kandukur", "Keshampet", "Kondurg", "Kothur", "Madgul", "Maheswaram", "Manchal", "Moinabad", "Nandigama", "Rajendranagar", "Saroornagar", "Serilingampally", "Shabad", "Shamshabad", "Shankarpalle", "Talakondapalle", "Yacharam"],
+"Sangareddy": ["Ameenpur", "Andole", "Gummadidala", "Hathnoora", "Jharasangam", "Jinnaram", "Kalher", "Kandi", "Kangti", "Kohir", "Kondapur", "Manoor", "Mogudampally", "Munpalle", "Nagilgidda", "Narayankhed", "Nyalkal", "Patancheru", "Pulkal", "Raikode", "Ramachandrapuram", "Sadasivpet", "Sangareddy", "Sirgapoor", "Vatpally", "Zahirabad"],
+"Siddipet": ["Akkannapet", "Bejjanki", "Cherial", "Chinnakodur", "Doultabad", "Dubbak", "Gajwel", "Husnabad", "Jagdevpur", "Koheda", "Komuravelli", "Kondapak", "Maddur-2", "Markook", "Mirdoddi", "Mulug-1", "Nangnoor", "Raipole", "Siddipet Urban", "Thoguta", "Wargal"],
+"Suryapet": ["Ananthagiri", "Atmakur (S)", "Chilkur", "Chivvemla", "Garide Palle", "Huzurnagar", "Jaji Reddi Gudem", "Kodad", "Maddirala", "Mattam Palle", "Mella Cheruvu", "Mothey", "Munagala", "Nadigudem", "Nagaram", "Neredcherla", "Nuthankal", "Palakeedu", "Penpahad", "Suryapet", "Thirumalgiri", "Thungathurthi"],
+"Vikarabad": ["Bantwaram", "Basheerabad", "Bomraspet", "Dharoor", "Doma", "Doulathabad", "Kodangal", "Kulkacharla", "Marpalle", "Mominpet", "Nawabpet-2", "Pargi", "Peddemul", "Pudur", "Tandur-2", "Vikarabad", "Yelal"],
+"Wanaparthy": ["Amarchintha", "Atmakur", "Chinnambavi", "Ghanpur", "Gopalpeta", "Kothakota", "Madanapur", "Pangal", "Pebbair", "Peddamandadi", "Revally", "Srirangapur", "Veepangandla", "Wanaparthy"],
+"Warangal": ["Kothaguda"],
+"Warangal (Rural)": ["Chennaraopet", "Damera", "Duggondi", "Geesugonda", "Khanapur-1", "Nadikuda", "Nallabelly", "Narsampet", "Nekkonda", "Parkal", "Parvathagiri", "Raiparthy", "Sangam", "Shayampet", "Wardhannapet"],
+"Warangal (Urban)": ["Atmakur", "Bheemadevarpalle", "Dharmasagar", "Elkathurthi", "Hanamkonda", "Hasanparthy", "Inavole", "Kamalapur", "Khazipet", "Khila Warangal", "Saidapur", "Velair", "Warangal"],
+"Yadadri Bhuvanagiri": ["Addaguduru", "Alair", "Atmakur (M)", "Bhongir","Bibinagar", "Bommalaramaram", "Choutuppal", "Gundala-2", "M.Turkapalle", "Motakonduru", "Mothkur", "Narayanapur", "Pochampalle", "Rajapet", "Ramannapeta", "Valigonda", "Yadagirigutta"]
+
             };
 
             // Populate the subcategory dropdown based on the selected district
