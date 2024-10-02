@@ -183,20 +183,22 @@
         // Function to submit the form data to Google Sheets
 function submitForm() {
     const data = {
-    name: document.getElementById("customerName").value, // Updated to use the correct ID
-    locationInfo: document.getElementById("location").value,
-    purposeOfVisit: document.querySelector('input[name="purpose-of-visit"]:checked').value,
-    dropdown2: document.getElementById("dropdown2").value,
-    district: document.getElementById("district").value,
-    mandal: document.getElementById("subcategory").value,
-    latitude: document.getElementById("latitude").value,
-    longitude: document.getElementById("longitude").value,
-    contactInfo: document.getElementById("contactInfo").value, // Added for Phone Number
-    tractorInVillage: document.querySelector('input[name="question1"]:checked').value, // For JD Tractor question
-    mfwdInVillage: document.querySelector('input[name="question2"]:checked').value, // For JD MFWD 4WD Tractor question
+    name: document.getElementById("search-name").value, // Capture name from search input
+            customerName: document.getElementById("customerName").value, // Customer Name from the input
+            locationInfo: document.getElementById("location").value,
+         purposeofVisit: document.querySelector('input[name="purpose-of-visit"]:checked').value,
+            dropdown2: document.getElementById("dropdown2").value,
+            district: document.getElementById("district").value,
+            mandal: document.getElementById("subcategory").value,
+            latitude: document.getElementById("latitude").value,
+            longitude: document.getElementById("longitude").value,
+            contactInfo: document.getElementById("contactInfo").value,
+            tractorInVillage: document.querySelector('input[name="question1"]:checked').value,
+            mfwdInVillage: document.querySelector('input[name="question2"]:checked').value,
+            deviceType: getDeviceType() // Function to determine device type
 };
 
-    const url = "https://script.google.com/macros/s/AKfycbwkBXKYB3f2bwRaiRDSfAY0FhXxJrqBx1lY-2w0VZyGFYAZjhad7wTSI964AYNNZ0S-pw/exec"; // Replace with your Google Apps Script URL
+    const url = "https://script.google.com/macros/s/AKfycbxERI8zrq-UHR5WhsBqBbkjPyFlKS9nzHJJkx4PzUz-tY10FuE3jTN4H8eYQvHEI3XDxA/exec"; // Replace with your Google Apps Script URL
 
     const submitButton = document.getElementById("submit-button");
             submitButton.textContent = "Pl wait, uploading data"; // Change button text
