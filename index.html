@@ -239,7 +239,7 @@ function submitForm() {
 
     <form onsubmit="event.preventDefault(); submitForm();">
         <label for="search-name">Select Your Name:</label>
-        <input type="text" id="search-name" placeholder="Type to search..." oninput="filterNames()" autocomplete="off">
+        <input type="text" id="search-name" placeholder="Type to search..." oninput="filterNames()" autocomplete="off" required>
         <ul id="name-list" class="name-list"></ul>
         <div id="error-message" class="error-message"></div> <!-- For displaying error messages -->
 
@@ -313,7 +313,7 @@ function submitForm() {
         <br>
 
         <label for="district"><b>Select District:</b></label>
-        <select id="district" name="district" onchange="updateSubcategories()">
+        <select id="district" name="district" onchange="updateSubcategories()" required>
             <option value="">Click to select</option>
             <option value="Adilabad">Adilabad</option>
             <option value="Bhadradri Kothagudem">Bhadradri Kothagudem</option>
@@ -355,7 +355,7 @@ function submitForm() {
 
         <div class="question-box">
             <label for="subcategory"><b>Select Mandal:</b></label>
-            <select id="subcategory" name="subcategory">
+            <select id="subcategory" name="subcategory" required>
                 <option value="">Click to Select</option>
             </select>
         </div>
